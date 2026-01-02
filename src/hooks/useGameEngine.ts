@@ -91,13 +91,14 @@ const initialState: GameState = {
   bonusJumps: 0,
   isPlaying: false,
   isGameOver: false,
-  clowns: [createInitialClown('left'), createInitialClown('right')],
+  // One clown on seesaw, one on diving board
+  clowns: [createInitialClown('left', false), createInitialClown('right', true)],
   balloons: createBalloons(),
   seesaw: {
     x: CANVAS_WIDTH / 2,
     y: SEESAW_Y,
     width: SEESAW_WIDTH,
-    tilt: 'center',
+    tilt: 'left', // Tilted because only left clown is on it
   },
   floatingTexts: [],
 };
@@ -355,7 +356,14 @@ export const useGameEngine = () => {
       ...initialState,
       isPlaying: true,
       balloons: createBalloons(),
-      clowns: [createInitialClown('left'), createInitialClown('right')],
+      // One clown on seesaw (left), one on diving board (right)
+      clowns: [createInitialClown('left', false), createInitialClown('right', true)],
+      seesaw: {
+        x: CANVAS_WIDTH / 2,
+        y: SEESAW_Y,
+        width: SEESAW_WIDTH,
+        tilt: 'left',
+      },
     });
     seesawXRef.current = CANVAS_WIDTH / 2;
     startBackgroundMusic();
