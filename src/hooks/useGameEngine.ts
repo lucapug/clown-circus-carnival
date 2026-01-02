@@ -21,6 +21,15 @@ const SEESAW_Y = CANVAS_HEIGHT - 80;
 const BALLOON_ROWS = 4;
 const BALLOONS_PER_ROW = 14;
 
+// Diving board positions (middle-sides of screen)
+const DIVING_BOARD_Y = CANVAS_HEIGHT / 2;
+export const DIVING_BOARDS = [
+  { x: 40, y: DIVING_BOARD_Y - 50, side: 'left' as const },
+  { x: 40, y: DIVING_BOARD_Y + 50, side: 'left' as const },
+  { x: CANVAS_WIDTH - 40, y: DIVING_BOARD_Y - 50, side: 'right' as const },
+  { x: CANVAS_WIDTH - 40, y: DIVING_BOARD_Y + 50, side: 'right' as const },
+];
+
 const createBalloons = (): Balloon[] => {
   const balloons: Balloon[] = [];
   const colors: Balloon['color'][] = ['blue', 'green', 'green', 'yellow'];
@@ -45,15 +54,36 @@ const createBalloons = (): Balloon[] => {
   return balloons;
 };
 
-const createInitialClown = (side: 'left' | 'right'): Clown => ({
-  x: side === 'left' ? CANVAS_WIDTH / 2 - SEESAW_WIDTH / 3 : CANVAS_WIDTH / 2 + SEESAW_WIDTH / 3,
-  y: SEESAW_Y - CLOWN_SIZE,
-  vx: 0,
-  vy: 0,
-  isFlying: false,
-  isOnSeesaw: true,
-  seesawSide: side,
-});
+const createInitialClown = (side: 'left' | 'right', onDivingBoard: boolean = true): Clown => {
+  if (onDivingBoard) {
+    // Start on a diving board
+    const boardIndex = side === 'left' ? 0 : 2;
+    const board = DIVING_BOARDS[boardIndex];
+    // Position clown at the edge of the diving board (where they'd jump from)
+    const clownX = side === 'left' ? 60 : CANVAS_WIDTH - 60;
+    return {
+      x: clownX,
+      y: board.y - CLOWN_SIZE - 4,
+      vx: 0,
+      vy: 0,
+      isFlying: false,
+      isOnSeesaw: false,
+      seesawSide: side,
+      isOnDivingBoard: true,
+      divingBoardIndex: boardIndex,
+    };
+  }
+  return {
+    x: side === 'left' ? CANVAS_WIDTH / 2 - SEESAW_WIDTH / 3 : CANVAS_WIDTH / 2 + SEESAW_WIDTH / 3,
+    y: SEESAW_Y - CLOWN_SIZE,
+    vx: 0,
+    vy: 0,
+    isFlying: false,
+    isOnSeesaw: true,
+    seesawSide: side,
+    isOnDivingBoard: false,
+  };
+};
 
 const initialState: GameState = {
   score: 0,
@@ -335,6 +365,23 @@ export const useGameEngine = () => {
     setGameState(prev => {
       if (!prev.isPlaying || prev.isGameOver) return prev;
       
+      // First check for clown on diving board
+      const clownOnDivingBoard = prev.clowns.find(c => c.isOnDivingBoard);
+      if (clownOnDivingBoard) {
+        const board = DIVING_BOARDS[clownOnDivingBoard.divingBoardIndex || 0];
+        const directionX = board.side === 'left' ? 3 : -3;
+        
+        return {
+          ...prev,
+          clowns: prev.clowns.map(c => 
+            c === clownOnDivingBoard
+              ? { ...c, isFlying: true, isOnDivingBoard: false, vy: 2, vx: directionX }
+              : c
+          ),
+        };
+      }
+      
+      // Then check for clown on seesaw
       const clownToLaunch = prev.clowns.find(c => c.isOnSeesaw);
       if (!clownToLaunch) return prev;
       

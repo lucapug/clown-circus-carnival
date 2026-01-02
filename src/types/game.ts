@@ -12,6 +12,8 @@ export interface Clown extends Position, Velocity {
   isFlying: boolean;
   isOnSeesaw: boolean;
   seesawSide: 'left' | 'right';
+  isOnDivingBoard?: boolean;
+  divingBoardIndex?: number;
 }
 
 export interface Balloon extends Position {
