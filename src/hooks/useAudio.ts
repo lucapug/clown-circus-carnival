@@ -81,35 +81,43 @@ export const useAudio = () => {
   const startBackgroundMusic = useCallback(() => {
     const ctx = getAudioContext();
     
-    // Simple looping melody
-    const playMelody = () => {
-      const melody = [
-        { freq: 262, dur: 0.2 }, // C
-        { freq: 294, dur: 0.2 }, // D
-        { freq: 330, dur: 0.2 }, // E
-        { freq: 349, dur: 0.2 }, // F
-        { freq: 392, dur: 0.4 }, // G
-        { freq: 349, dur: 0.2 }, // F
-        { freq: 330, dur: 0.2 }, // E
-        { freq: 294, dur: 0.4 }, // D
+    // Relaxing ambient melody with longer notes and softer tones
+    const playAmbientLoop = () => {
+      // Pentatonic scale for a calming, non-repetitive feel
+      const ambientNotes = [
+        { freq: 196, dur: 1.2 },   // G3
+        { freq: 220, dur: 0.8 },   // A3
+        { freq: 262, dur: 1.0 },   // C4
+        { freq: 294, dur: 1.4 },   // D4
+        { freq: 330, dur: 0.6 },   // E4
+        { freq: 262, dur: 1.0 },   // C4
+        { freq: 220, dur: 1.2 },   // A3
+        { freq: 196, dur: 1.6 },   // G3
+        { freq: 165, dur: 1.0 },   // E3
+        { freq: 196, dur: 0.8 },   // G3
+        { freq: 220, dur: 1.4 },   // A3
+        { freq: 262, dur: 1.0 },   // C4
       ];
       
       let time = 0;
-      melody.forEach(({ freq, dur }) => {
+      ambientNotes.forEach(({ freq, dur }) => {
         setTimeout(() => {
           if (bgMusicRef.current !== null) {
-            playTone(freq, dur * 0.9, 'square', 0.08);
+            // Soft sine wave for relaxing sound
+            playTone(freq, dur * 0.85, 'sine', 0.04);
+            // Add subtle harmonic
+            playTone(freq * 2, dur * 0.5, 'sine', 0.015);
           }
         }, time * 1000);
-        time += dur;
+        time += dur * 0.7; // Overlap notes slightly for smoothness
       });
       
-      // Loop
+      // Loop with a pause
       setTimeout(() => {
         if (bgMusicRef.current !== null) {
-          playMelody();
+          playAmbientLoop();
         }
-      }, time * 1000 + 500);
+      }, time * 1000 + 2000);
     };
     
     // Use a dummy oscillator to track if music is playing
@@ -122,7 +130,7 @@ export const useAudio = () => {
     bgMusicRef.current = osc;
     bgGainRef.current = gain;
     
-    playMelody();
+    playAmbientLoop();
   }, [playTone]);
 
   const stopBackgroundMusic = useCallback(() => {
