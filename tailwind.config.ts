@@ -57,6 +57,14 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // Game-specific colors
+        balloon: {
+          yellow: "hsl(var(--balloon-yellow))",
+          green: "hsl(var(--balloon-green))",
+          blue: "hsl(var(--balloon-blue))",
+        },
+        clown: "hsl(var(--clown-body))",
+        seesaw: "hsl(var(--seesaw))",
       },
       borderRadius: {
         lg: "var(--radius)",
