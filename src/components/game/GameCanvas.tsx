@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { GameState } from '@/types/game';
+import { DIVING_BOARDS } from '@/hooks/useGameEngine';
 
 interface GameCanvasProps {
   gameState: GameState;
@@ -166,37 +167,36 @@ export const GameCanvas = ({ gameState, width, height, onMouseMove, onClick }: G
       ctx.restore();
     });
 
-    // Draw springboards (4 total: 2 on each side)
-    const springboardWidth = 50;
-    const springboardHeight = 30;
-    const springboardY = height - 60;
-    const springboardPositions = [
-      { x: 60, label: '1' },   // Left outer
-      { x: 130, label: '2' },  // Left inner
-      { x: width - 130, label: '3' }, // Right inner
-      { x: width - 60, label: '4' },  // Right outer
-    ];
-
-    springboardPositions.forEach(({ x }) => {
+    // Draw diving boards (4 total: 2 on each side, at middle of screen)
+    const boardWidth = 60;
+    const boardHeight = 8;
+    
+    DIVING_BOARDS.forEach((board, index) => {
       ctx.save();
       
-      // Springboard base
-      ctx.fillStyle = 'hsl(30, 60%, 35%)';
-      ctx.fillRect(x - springboardWidth / 2, springboardY, springboardWidth, springboardHeight);
+      // Support pole
+      ctx.fillStyle = 'hsl(30, 60%, 25%)';
+      if (board.side === 'left') {
+        ctx.fillRect(10, board.y - 40, 15, 100);
+      } else {
+        ctx.fillRect(width - 25, board.y - 40, 15, 100);
+      }
       
-      // Springboard top (the spring part)
-      ctx.fillStyle = 'hsl(50, 80%, 50%)';
-      ctx.fillRect(x - springboardWidth / 2 + 5, springboardY - 8, springboardWidth - 10, 10);
+      // Diving board platform
+      ctx.fillStyle = 'hsl(200, 60%, 45%)';
+      ctx.shadowColor = 'hsl(200, 80%, 60%)';
+      ctx.shadowBlur = 5;
       
-      // Spring coils
-      ctx.strokeStyle = 'hsl(0, 0%, 60%)';
-      ctx.lineWidth = 2;
-      for (let i = 0; i < 3; i++) {
-        const coilX = x - 15 + i * 15;
-        ctx.beginPath();
-        ctx.moveTo(coilX, springboardY);
-        ctx.quadraticCurveTo(coilX + 7, springboardY + 15, coilX, springboardY + springboardHeight);
-        ctx.stroke();
+      if (board.side === 'left') {
+        ctx.fillRect(20, board.y - boardHeight / 2, boardWidth, boardHeight);
+        // Board edge stripe
+        ctx.fillStyle = 'hsl(0, 70%, 50%)';
+        ctx.fillRect(20 + boardWidth - 10, board.y - boardHeight / 2, 10, boardHeight);
+      } else {
+        ctx.fillRect(width - 20 - boardWidth, board.y - boardHeight / 2, boardWidth, boardHeight);
+        // Board edge stripe
+        ctx.fillStyle = 'hsl(0, 70%, 50%)';
+        ctx.fillRect(width - 20 - boardWidth, board.y - boardHeight / 2, 10, boardHeight);
       }
       
       ctx.restore();
