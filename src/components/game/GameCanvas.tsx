@@ -166,6 +166,42 @@ export const GameCanvas = ({ gameState, width, height, onMouseMove, onClick }: G
       ctx.restore();
     });
 
+    // Draw springboards (4 total: 2 on each side)
+    const springboardWidth = 50;
+    const springboardHeight = 30;
+    const springboardY = height - 60;
+    const springboardPositions = [
+      { x: 60, label: '1' },   // Left outer
+      { x: 130, label: '2' },  // Left inner
+      { x: width - 130, label: '3' }, // Right inner
+      { x: width - 60, label: '4' },  // Right outer
+    ];
+
+    springboardPositions.forEach(({ x }) => {
+      ctx.save();
+      
+      // Springboard base
+      ctx.fillStyle = 'hsl(30, 60%, 35%)';
+      ctx.fillRect(x - springboardWidth / 2, springboardY, springboardWidth, springboardHeight);
+      
+      // Springboard top (the spring part)
+      ctx.fillStyle = 'hsl(50, 80%, 50%)';
+      ctx.fillRect(x - springboardWidth / 2 + 5, springboardY - 8, springboardWidth - 10, 10);
+      
+      // Spring coils
+      ctx.strokeStyle = 'hsl(0, 0%, 60%)';
+      ctx.lineWidth = 2;
+      for (let i = 0; i < 3; i++) {
+        const coilX = x - 15 + i * 15;
+        ctx.beginPath();
+        ctx.moveTo(coilX, springboardY);
+        ctx.quadraticCurveTo(coilX + 7, springboardY + 15, coilX, springboardY + springboardHeight);
+        ctx.stroke();
+      }
+      
+      ctx.restore();
+    });
+
     // Draw ground line
     ctx.strokeStyle = 'hsl(270, 50%, 30%)';
     ctx.lineWidth = 2;
