@@ -184,40 +184,63 @@ export const useGameEngine = () => {
         if (clown.vy > 0 && clown.y >= SEESAW_Y - CLOWN_SIZE) {
           const seesawLeft = seesawX - SEESAW_WIDTH / 2;
           const seesawRight = seesawX + SEESAW_WIDTH / 2;
+          const seesawCenter = seesawX;
+          const edgeZone = SEESAW_WIDTH / 4; // Only edges are safe landing zones
           
+          // Check if clown hits the seesaw area
           if (clown.x >= seesawLeft && clown.x <= seesawRight) {
-            // Successful landing!
-            playBounce();
-            scoreGain += BOUNCE_POINTS;
-            addFloatingText(`+${BOUNCE_POINTS}`, clown.x, clown.y);
+            // Check if landing on the edges (safe) or middle (death)
+            const distanceFromCenter = Math.abs(clown.x - seesawCenter);
+            const isOnEdge = distanceFromCenter > edgeZone * 0.5;
             
-            const side = clown.x < seesawX ? 'left' : 'right';
-            
-            // Find the other clown on the seesaw and launch them
-            const otherIdx = newClowns.findIndex((c, i) => 
-              i !== idx && c.isOnSeesaw && c.seesawSide !== side
-            );
-            
-            if (otherIdx !== -1) {
-              newClowns[otherIdx] = {
-                ...newClowns[otherIdx],
-                isFlying: true,
-                isOnSeesaw: false,
-                vy: BOUNCE_VELOCITY,
-                vx: (Math.random() - 0.5) * 4,
+            if (isOnEdge) {
+              // Successful landing on edge!
+              playBounce();
+              scoreGain += BOUNCE_POINTS;
+              addFloatingText(`+${BOUNCE_POINTS}`, clown.x, clown.y);
+              
+              const side: 'left' | 'right' = clown.x < seesawCenter ? 'left' : 'right';
+              
+              // Find the other clown on the seesaw and launch them
+              const otherIdx = newClowns.findIndex((c, i) => 
+                i !== idx && c.isOnSeesaw && c.seesawSide !== side
+              );
+              
+              if (otherIdx !== -1) {
+                newClowns[otherIdx] = {
+                  ...newClowns[otherIdx],
+                  isFlying: true,
+                  isOnSeesaw: false,
+                  vy: BOUNCE_VELOCITY,
+                  vx: (Math.random() - 0.5) * 4,
+                };
+              }
+              
+              return {
+                ...clown,
+                isFlying: false,
+                isOnSeesaw: true,
+                seesawSide: side,
+                y: SEESAW_Y - CLOWN_SIZE,
+                x: side === 'left' ? seesawX - SEESAW_WIDTH / 4 : seesawX + SEESAW_WIDTH / 4,
+                vx: 0,
+                vy: 0,
               };
+            } else {
+              // Landing in the middle = death!
+              newLives--;
+              livesLost = true;
+              playDeath();
+              addFloatingText('SPLAT!', clown.x, SEESAW_Y - 30);
+              
+              // Reset clown to seesaw
+              const existingSides = newClowns
+                .filter((c, i) => i !== idx && c.isOnSeesaw)
+                .map(c => c.seesawSide);
+              const freeSide: 'left' | 'right' = !existingSides.includes('left') ? 'left' : 'right';
+              
+              return createInitialClown(freeSide);
             }
-            
-            return {
-              ...clown,
-              isFlying: false,
-              isOnSeesaw: true,
-              seesawSide: side as 'left' | 'right',
-              y: SEESAW_Y - CLOWN_SIZE,
-              x: side === 'left' ? seesawX - SEESAW_WIDTH / 4 : seesawX + SEESAW_WIDTH / 4,
-              vx: 0,
-              vy: 0,
-            } as Clown;
           }
         }
         
