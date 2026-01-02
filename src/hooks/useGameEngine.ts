@@ -185,13 +185,21 @@ export const useGameEngine = () => {
           const seesawLeft = seesawX - SEESAW_WIDTH / 2;
           const seesawRight = seesawX + SEESAW_WIDTH / 2;
           const seesawCenter = seesawX;
-          const edgeZone = SEESAW_WIDTH / 4; // Only edges are safe landing zones
+          
+          // Define the safe landing zones (where the other clown sits)
+          // Left edge zone: from seesawLeft to seesawLeft + SEESAW_WIDTH/3
+          // Right edge zone: from seesawRight - SEESAW_WIDTH/3 to seesawRight
+          // Middle (death zone): everything else
+          const edgeWidth = SEESAW_WIDTH / 3;
+          const leftEdgeRight = seesawLeft + edgeWidth;
+          const rightEdgeLeft = seesawRight - edgeWidth;
           
           // Check if clown hits the seesaw area
           if (clown.x >= seesawLeft && clown.x <= seesawRight) {
-            // Check if landing on the edges (safe) or middle (death)
-            const distanceFromCenter = Math.abs(clown.x - seesawCenter);
-            const isOnEdge = distanceFromCenter > edgeZone * 0.5;
+            // Check if landing on edges (safe) or middle (death)
+            const isOnLeftEdge = clown.x >= seesawLeft && clown.x <= leftEdgeRight;
+            const isOnRightEdge = clown.x >= rightEdgeLeft && clown.x <= seesawRight;
+            const isOnEdge = isOnLeftEdge || isOnRightEdge;
             
             if (isOnEdge) {
               // Successful landing on edge!
@@ -199,7 +207,7 @@ export const useGameEngine = () => {
               scoreGain += BOUNCE_POINTS;
               addFloatingText(`+${BOUNCE_POINTS}`, clown.x, clown.y);
               
-              const side: 'left' | 'right' = clown.x < seesawCenter ? 'left' : 'right';
+              const side: 'left' | 'right' = isOnLeftEdge ? 'left' : 'right';
               
               // Find the other clown on the seesaw and launch them
               const otherIdx = newClowns.findIndex((c, i) => 
