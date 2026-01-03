@@ -16,27 +16,27 @@
     --popover: 240 15% 8%;
     --popover-foreground: 60 10% 95%;
 
-    /* Neon pink primary */
-    --primary: 330 100% 60%;
+    /* Electric blue primary - classic arcade */
+    --primary: 200 100% 55%;
     --primary-foreground: 240 20% 4%;
 
-    /* Dark purple secondary */
-    --secondary: 270 60% 20%;
+    /* Deep blue secondary */
+    --secondary: 220 70% 20%;
     --secondary-foreground: 60 10% 95%;
 
     --muted: 240 15% 15%;
     --muted-foreground: 240 10% 60%;
 
-    /* Cyan accent */
-    --accent: 180 100% 50%;
+    /* Lime green accent */
+    --accent: 120 100% 50%;
     --accent-foreground: 240 20% 4%;
 
     --destructive: 0 80% 55%;
     --destructive-foreground: 60 10% 95%;
 
-    --border: 270 50% 30%;
-    --input: 270 50% 30%;
-    --ring: 330 100% 60%;
+    --border: 200 60% 30%;
+    --input: 200 60% 30%;
+    --ring: 200 100% 55%;
 
     --radius: 0.25rem;
 
@@ -46,23 +46,23 @@
     --balloon-blue: 210 100% 55%;
     --clown-body: 40 80% 65%;
     --seesaw: 0 0% 80%;
-    --neon-glow: 330 100% 60%;
+    --neon-glow: 200 100% 55%;
 
     /* Arcade shadows and effects */
-    --glow-primary: 0 0 20px hsl(330 100% 60% / 0.6);
-    --glow-cyan: 0 0 20px hsl(180 100% 50% / 0.6);
+    --glow-primary: 0 0 20px hsl(200 100% 55% / 0.6);
+    --glow-cyan: 0 0 20px hsl(120 100% 50% / 0.6);
     --glow-yellow: 0 0 15px hsl(50 100% 55% / 0.8);
     --glow-green: 0 0 15px hsl(140 80% 45% / 0.8);
     --glow-blue: 0 0 15px hsl(210 100% 55% / 0.8);
 
     --sidebar-background: 240 15% 8%;
     --sidebar-foreground: 60 10% 95%;
-    --sidebar-primary: 330 100% 60%;
+    --sidebar-primary: 200 100% 55%;
     --sidebar-primary-foreground: 240 20% 4%;
-    --sidebar-accent: 270 60% 20%;
+    --sidebar-accent: 220 70% 20%;
     --sidebar-accent-foreground: 60 10% 95%;
-    --sidebar-border: 270 50% 30%;
-    --sidebar-ring: 330 100% 60%;
+    --sidebar-border: 200 60% 30%;
+    --sidebar-ring: 200 100% 55%;
   }
 
   .dark {
@@ -72,27 +72,27 @@
     --card-foreground: 60 10% 95%;
     --popover: 240 15% 8%;
     --popover-foreground: 60 10% 95%;
-    --primary: 330 100% 60%;
+    --primary: 200 100% 55%;
     --primary-foreground: 240 20% 4%;
-    --secondary: 270 60% 20%;
+    --secondary: 220 70% 20%;
     --secondary-foreground: 60 10% 95%;
     --muted: 240 15% 15%;
     --muted-foreground: 240 10% 60%;
-    --accent: 180 100% 50%;
+    --accent: 120 100% 50%;
     --accent-foreground: 240 20% 4%;
     --destructive: 0 80% 55%;
     --destructive-foreground: 60 10% 95%;
-    --border: 270 50% 30%;
-    --input: 270 50% 30%;
-    --ring: 330 100% 60%;
+    --border: 200 60% 30%;
+    --input: 200 60% 30%;
+    --ring: 200 100% 55%;
     --sidebar-background: 240 15% 8%;
     --sidebar-foreground: 60 10% 95%;
-    --sidebar-primary: 330 100% 60%;
+    --sidebar-primary: 200 100% 55%;
     --sidebar-primary-foreground: 240 20% 4%;
-    --sidebar-accent: 270 60% 20%;
+    --sidebar-accent: 220 70% 20%;
     --sidebar-accent-foreground: 60 10% 95%;
-    --sidebar-border: 270 50% 30%;
-    --sidebar-ring: 330 100% 60%;
+    --sidebar-border: 200 60% 30%;
+    --sidebar-ring: 200 100% 55%;
   }
 }
 
