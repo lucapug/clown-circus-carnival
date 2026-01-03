@@ -240,9 +240,9 @@ export const useGameEngine = () => {
               
               const side: 'left' | 'right' = isOnLeftEdge ? 'left' : 'right';
               
-              // Find the other clown on the seesaw and launch them
+              // Find the other clown on the seesaw (any clown that's currently sitting on seesaw)
               const otherIdx = newClowns.findIndex((c, i) => 
-                i !== idx && c.isOnSeesaw && c.seesawSide !== side
+                i !== idx && c.isOnSeesaw
               );
               
               if (otherIdx !== -1) {
