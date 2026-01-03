@@ -10,10 +10,10 @@ export const StartScreen = ({ onStart, leaderboard }: StartScreenProps) => {
   return (
     <div className="absolute inset-0 bg-background/95 flex items-center justify-center z-10">
       <div className="text-center max-w-lg mx-4">
-        <h1 className="text-5xl font-bold text-primary arcade-text mb-2 pixel-font animate-pulse-glow">
+        <h1 className="text-5xl font-bold rainbow-text mb-2 pixel-font">
           CIRCUS
         </h1>
-        <h2 className="text-2xl text-accent mb-8 pixel-font">
+        <h2 className="text-2xl rainbow-gradient mb-8 pixel-font">
           CLOWNS
         </h2>
 

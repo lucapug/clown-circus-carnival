@@ -170,6 +170,33 @@
   75% { transform: translateX(5px); }
 }
 
+/* Rainbow animations */
+@keyframes rainbow-shift {
+  0% { color: hsl(0 100% 60%); text-shadow: 0 0 20px hsl(0 100% 60% / 0.8); }
+  16% { color: hsl(45 100% 55%); text-shadow: 0 0 20px hsl(45 100% 55% / 0.8); }
+  33% { color: hsl(120 80% 50%); text-shadow: 0 0 20px hsl(120 80% 50% / 0.8); }
+  50% { color: hsl(180 100% 50%); text-shadow: 0 0 20px hsl(180 100% 50% / 0.8); }
+  66% { color: hsl(220 100% 60%); text-shadow: 0 0 20px hsl(220 100% 60% / 0.8); }
+  83% { color: hsl(280 100% 60%); text-shadow: 0 0 20px hsl(280 100% 60% / 0.8); }
+  100% { color: hsl(0 100% 60%); text-shadow: 0 0 20px hsl(0 100% 60% / 0.8); }
+}
+
+@keyframes rainbow-bg {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes rainbow-border {
+  0% { border-color: hsl(0 100% 60%); box-shadow: 0 0 15px hsl(0 100% 60% / 0.6); }
+  16% { border-color: hsl(45 100% 55%); box-shadow: 0 0 15px hsl(45 100% 55% / 0.6); }
+  33% { border-color: hsl(120 80% 50%); box-shadow: 0 0 15px hsl(120 80% 50% / 0.6); }
+  50% { border-color: hsl(180 100% 50%); box-shadow: 0 0 15px hsl(180 100% 50% / 0.6); }
+  66% { border-color: hsl(220 100% 60%); box-shadow: 0 0 15px hsl(220 100% 60% / 0.6); }
+  83% { border-color: hsl(280 100% 60%); box-shadow: 0 0 15px hsl(280 100% 60% / 0.6); }
+  100% { border-color: hsl(0 100% 60%); box-shadow: 0 0 15px hsl(0 100% 60% / 0.6); }
+}
+
 .animate-blink {
   animation: blink 1s infinite;
 }
@@ -188,4 +215,36 @@
 
 .animate-shake {
   animation: shake 0.3s ease-in-out;
+}
+
+/* Rainbow utilities */
+.rainbow-text {
+  animation: rainbow-shift 3s linear infinite;
+}
+
+.rainbow-gradient {
+  background: linear-gradient(
+    90deg,
+    hsl(0 100% 60%),
+    hsl(45 100% 55%),
+    hsl(120 80% 50%),
+    hsl(180 100% 50%),
+    hsl(220 100% 60%),
+    hsl(280 100% 60%),
+    hsl(0 100% 60%)
+  );
+  background-size: 200% auto;
+  animation: rainbow-bg 3s linear infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.rainbow-border {
+  border: 3px solid;
+  animation: rainbow-border 3s linear infinite;
+}
+
+.rainbow-glow {
+  animation: rainbow-shift 2s linear infinite;
 }
