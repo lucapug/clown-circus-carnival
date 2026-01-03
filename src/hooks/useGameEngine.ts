@@ -206,8 +206,9 @@ export const useGameEngine = () => {
       // Check seesaw collision for flying clowns
       const seesawX = seesawXRef.current;
       let newLives = prev.lives;
-      let livesLost = false;
+      let clownToLaunchIdx: number | null = null;
       
+      // First pass: detect landings and mark which clown to launch
       const processedClowns: Clown[] = newClowns.map((clown, idx) => {
         if (!clown.isFlying) return clown;
         
@@ -215,19 +216,14 @@ export const useGameEngine = () => {
         if (clown.vy > 0 && clown.y >= SEESAW_Y - CLOWN_SIZE) {
           const seesawLeft = seesawX - SEESAW_WIDTH / 2;
           const seesawRight = seesawX + SEESAW_WIDTH / 2;
-          const seesawCenter = seesawX;
           
-          // Define the safe landing zones (where the other clown sits)
-          // Left edge zone: from seesawLeft to seesawLeft + SEESAW_WIDTH/3
-          // Right edge zone: from seesawRight - SEESAW_WIDTH/3 to seesawRight
-          // Middle (death zone): everything else
+          // Define the safe landing zones
           const edgeWidth = SEESAW_WIDTH / 3;
           const leftEdgeRight = seesawLeft + edgeWidth;
           const rightEdgeLeft = seesawRight - edgeWidth;
           
           // Check if clown hits the seesaw area
           if (clown.x >= seesawLeft && clown.x <= seesawRight) {
-            // Check if landing on edges (safe) or middle (death)
             const isOnLeftEdge = clown.x >= seesawLeft && clown.x <= leftEdgeRight;
             const isOnRightEdge = clown.x >= rightEdgeLeft && clown.x <= seesawRight;
             const isOnEdge = isOnLeftEdge || isOnRightEdge;
@@ -240,19 +236,10 @@ export const useGameEngine = () => {
               
               const side: 'left' | 'right' = isOnLeftEdge ? 'left' : 'right';
               
-              // Find the other clown on the seesaw (any clown that's currently sitting on seesaw)
-              const otherIdx = newClowns.findIndex((c, i) => 
-                i !== idx && c.isOnSeesaw
-              );
-              
+              // Find the other clown on the seesaw to launch
+              const otherIdx = newClowns.findIndex((c, i) => i !== idx && c.isOnSeesaw);
               if (otherIdx !== -1) {
-                newClowns[otherIdx] = {
-                  ...newClowns[otherIdx],
-                  isFlying: true,
-                  isOnSeesaw: false,
-                  vy: BOUNCE_VELOCITY,
-                  vx: (Math.random() - 0.5) * 4,
-                };
+                clownToLaunchIdx = otherIdx;
               }
               
               return {
@@ -268,17 +255,12 @@ export const useGameEngine = () => {
             } else {
               // Landing in the middle = death!
               newLives--;
-              livesLost = true;
               playDeath();
               addFloatingText('SPLAT!', clown.x, SEESAW_Y - 30);
               
-              // Reset clown to seesaw
-              const existingSides = newClowns
-                .filter((c, i) => i !== idx && c.isOnSeesaw)
-                .map(c => c.seesawSide);
-              const freeSide: 'left' | 'right' = !existingSides.includes('left') ? 'left' : 'right';
-              
-              return createInitialClown(freeSide);
+              // Reset clown to diving board
+              const freeSide: 'left' | 'right' = clown.seesawSide === 'left' ? 'right' : 'left';
+              return createInitialClown(freeSide, true);
             }
           }
         }
@@ -286,19 +268,27 @@ export const useGameEngine = () => {
         // Check if clown fell off screen
         if (clown.y > CANVAS_HEIGHT + 50) {
           newLives--;
-          livesLost = true;
           playDeath();
           addFloatingText('SPLAT!', clown.x, CANVAS_HEIGHT - 50);
           
-          // Reset clown to seesaw
-          const existingSides = newClowns
-            .filter((c, i) => i !== idx && c.isOnSeesaw)
-            .map(c => c.seesawSide);
-          const freeSide = !existingSides.includes('left') ? 'left' : 'right';
-          
-          return createInitialClown(freeSide);
+          // Reset clown to diving board
+          return createInitialClown('right', true);
         }
         
+        return clown;
+      });
+      
+      // Second pass: launch the other clown if someone landed
+      const finalClowns = processedClowns.map((clown, idx) => {
+        if (clownToLaunchIdx === idx && clown.isOnSeesaw) {
+          return {
+            ...clown,
+            isFlying: true,
+            isOnSeesaw: false,
+            vy: BOUNCE_VELOCITY,
+            vx: (Math.random() - 0.5) * 4,
+          };
+        }
         return clown;
       });
       
@@ -311,14 +301,14 @@ export const useGameEngine = () => {
       
       // Update seesaw position based on clowns
       let newTilt: 'left' | 'right' | 'center' = 'center';
-      const clownsOnSeesaw = processedClowns.filter(c => c.isOnSeesaw);
+      const clownsOnSeesaw = finalClowns.filter(c => c.isOnSeesaw);
       if (clownsOnSeesaw.length === 1) {
         newTilt = clownsOnSeesaw[0].seesawSide;
       }
       
       return {
         ...prev,
-        clowns: processedClowns,
+        clowns: finalClowns,
         balloons: newBalloons,
         score: prev.score + scoreGain,
         lives: newLives,
