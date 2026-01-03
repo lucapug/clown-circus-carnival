@@ -19,6 +19,6 @@ This separation is intentional to keep the project small, readable, and aligned 
 
 `style` focuses on UI/UX and visual/audio polish
 
-`logic`` focuses on game logic and backend behavior
+`logic` focuses on game logic and backend behavior
 
 `main` is used for review, documentation, and final integration
