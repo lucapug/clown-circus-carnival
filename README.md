@@ -1,73 +1,122 @@
-# Welcome to your Lovable project
+# Clown Circus Carnival
 
-## Project info
+This project is a modern remake inspired by classic arcade games *Circus* (Exidy, 1977) and *Clowns* (Midway, 1978).
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+The goal is to build a small but complete **end-to-end web application** that combines a playable arcade-style game with a leaderboard, while showcasing modern AI-assisted development workflows.
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## Project goals
 
-**Use Lovable**
+- Recreate the core mechanics of classic clown-and-balloons arcade games
+- Deliver a functional web-based game with sound and visual effects
+- Integrate a backend for score persistence and leaderboard
+- Demonstrate professional development practices:
+  - API-driven development
+  - AI-assisted coding
+  - CI/CD and reproducibility
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## Current status
 
-**Use your preferred IDE**
+- ✅ Frontend MVP implemented (graphics, sounds, basic gameplay)
+- ⏳ Backend and API integration (planned)
+- ⏳ Leaderboard persistence (planned)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+The frontend currently runs standalone using mocked or local state.  
+Backend integration will be introduced in later phases.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+---
 
-Follow these steps:
+## System architecture (high-level)
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+The system is designed with a **clear separation between frontend and backend**.
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+- **Frontend**
+  - React + TypeScript (Vite)
+  - Handles rendering, user input, and game loop
+  - Communicates with the backend via HTTP APIs
 
-# Step 3: Install the necessary dependencies.
-npm i
+- **Backend** *(planned)*
+  - Python + FastAPI
+  - Exposes REST endpoints for:
+    - score submission
+    - leaderboard retrieval
+  - Follows an OpenAPI specification used as the contract with the frontend
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+---
 
-**Edit a file directly in GitHub**
+## AI-assisted development workflow
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Different AI tools are used with **distinct responsibilities**:
 
-**Use GitHub Codespaces**
+- **Lovable Dev**
+  - Rapid prototyping of UI, styling, and sound effects
+  - Frontend MVP generation
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- **Roo Code**
+  - Architectural guidance and refactoring
+  - API design and backend scaffolding
+  - Documentation support
 
-## What technologies are used for this project?
+- **GitHub Copilot**
+  - Implementation of gameplay logic and backend functionality
+  - Tests and incremental improvements
 
-This project is built with:
+Guidelines for AI assistants are documented in `/docs/`.
 
+---
+
+## Technologies
+
+Frontend:
 - Vite
 - TypeScript
 - React
 - shadcn-ui
 - Tailwind CSS
 
-## How can I deploy this project?
+Backend (planned):
+- Python
+- FastAPI
+- OpenAPI
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+Tooling:
+- GitHub Actions (CI/CD)
+- Docker (containerization)
+- GitHub Codespaces (development environment)
 
-## Can I connect a custom domain to my Lovable project?
+---
 
-Yes, you can!
+## Development
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### Local development
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Requirements:
+- Node.js
+- npm
+
+```sh
+git clone <REPOSITORY_URL>
+cd clown-circus-carnival
+npm install
+npm run dev
+```
+
+### GitHub Codespaces
+
+The project can also be run using GitHub Codespaces with no local setup required.
+
+---
+
+### Deployment
+
+Deployment will be automated via CI/CD in later phases of the project.
+At the current stage, the frontend can be previewed locally or via Lovable.
+
+---
+
+### License
+
+This project is for educational purposes and personal experimentation.
