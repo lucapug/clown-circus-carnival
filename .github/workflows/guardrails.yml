@@ -1,0 +1,27 @@
+name: Guardrails
+
+on:
+  pull_request:
+    branches:
+      - main
+      - logic
+      - style
+
+jobs:
+  basic-guards:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ensure project rules are present
+        run: |
+          test -f AGENTS.md
+          test -f src/AGENTS.md
+          test -d docs
+
+      - name: Warn if style branch touches logic files
+        if: github.base_ref == 'style'
+        run: |
+            git diff --name-only origin/${{ github.base_ref }}...HEAD | \
+            grep -E 'src/(game|logic|state)' && \
+            echo "::warning::Style branch is touching logic files"
