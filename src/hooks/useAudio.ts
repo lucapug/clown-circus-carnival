@@ -62,45 +62,43 @@ export const useAudio = () => {
     // Chopin's Funeral March - arcade reinterpretation
     // Strong march rhythm at ~60 BPM
     const G3 = 207.65, F3 = 185.00, A3 = 233.08, B3 = 246.94, C4 = 277.18;
+    const D4 = 293.66, E4 = 329.63;
     
     const notes = [
-      // Line 1: G#3 G#3 G#3 | G#3 G#3 G#3
+      // Opening phrase: G#3 G#3 G#3 | G#3 (keep as is - user approved)
       { freq: G3, dur: 0.4, accent: true },
       { freq: G3, dur: 0.25 },
       { freq: G3, dur: 0.25 },
-      { freq: G3, dur: 0.4, accent: true },
-      { freq: G3, dur: 0.25 },
-      { freq: G3, dur: 0.35 },
-      // Line 2: C#4 B3 A#3 | G#3 G#3 F#3
-      { freq: C4, dur: 0.5, accent: true },
+      { freq: G3, dur: 0.55, accent: true },
+      // Main melodic phrase - rising with tension
+      { freq: C4, dur: 0.45, accent: true },
+      { freq: D4, dur: 0.35 },
+      { freq: E4, dur: 0.5, accent: true },
+      { freq: D4, dur: 0.3 },
+      // Descending resolution phrase
+      { freq: C4, dur: 0.4, accent: true },
       { freq: B3, dur: 0.3 },
-      { freq: A3, dur: 0.3 },
-      { freq: G3, dur: 0.4, accent: true },
-      { freq: G3, dur: 0.25 },
-      { freq: F3, dur: 0.35 },
-      // Line 3: G#3 A#3 B3 | C#4 B3 A#3
-      { freq: G3, dur: 0.4, accent: true },
-      { freq: A3, dur: 0.3 },
-      { freq: B3, dur: 0.3 },
-      { freq: C4, dur: 0.5, accent: true },
-      { freq: B3, dur: 0.3 },
-      { freq: A3, dur: 0.3 },
-      // Final: G#3 (held)
-      { freq: G3, dur: 1.2, accent: true },
+      { freq: A3, dur: 0.35 },
+      { freq: G3, dur: 0.45, accent: true },
+      // Dramatic ending - echo and final
+      { freq: A3, dur: 0.25 },
+      { freq: G3, dur: 0.3 },
+      { freq: F3, dur: 0.4, accent: true },
+      { freq: G3, dur: 1.0, accent: true }, // Final held note
     ];
     
     let time = 0;
     notes.forEach(({ freq, dur, accent }) => {
       setTimeout(() => {
-        const vol = accent ? 0.35 : 0.22;
+        const vol = accent ? 0.32 : 0.2;
         // Dark organ-like layered sound
         playTone(freq, dur * 0.9, 'sawtooth', vol);
         playTone(freq * 0.5, dur, 'triangle', vol * 0.5); // Sub-octave
         if (accent) {
-          playTone(freq * 2, dur * 0.4, 'sine', 0.06); // Harmonic on accents
+          playTone(freq * 2, dur * 0.4, 'sine', 0.05); // Harmonic on accents
         }
       }, time * 1000);
-      time += dur + 0.05;
+      time += dur + 0.06;
     });
   }, [playTone]);
 
