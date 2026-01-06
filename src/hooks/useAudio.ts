@@ -59,32 +59,22 @@ export const useAudio = () => {
   }, [playTone]);
 
   const playGameOver = useCallback(() => {
-    // Chopin's Funeral March - arcade reinterpretation
-    // Strong march rhythm at ~60 BPM
-    const G3 = 207.65, F3 = 185.00, A3 = 233.08, B3 = 246.94, C4 = 277.18;
-    const D4 = 293.66, E4 = 329.63;
+    // Chopin's Funeral March - from Online Sequencer
+    const A4 = 440.00, B4 = 493.88, C5 = 523.25, GS4 = 415.30;
     
     const notes = [
-      // Opening phrase: G#3 G#3 G#3 | G#3 (keep as is - user approved)
-      { freq: G3, dur: 0.4, accent: true },
-      { freq: G3, dur: 0.25 },
-      { freq: G3, dur: 0.25 },
-      { freq: G3, dur: 0.55, accent: true },
-      // Main melodic phrase - rising with tension
-      { freq: C4, dur: 0.45, accent: true },
-      { freq: D4, dur: 0.35 },
-      { freq: E4, dur: 0.5, accent: true },
-      { freq: D4, dur: 0.3 },
-      // Descending resolution phrase
-      { freq: C4, dur: 0.4, accent: true },
-      { freq: B3, dur: 0.3 },
-      { freq: A3, dur: 0.35 },
-      { freq: G3, dur: 0.45, accent: true },
-      // Dramatic ending - echo and final
-      { freq: A3, dur: 0.25 },
-      { freq: G3, dur: 0.3 },
-      { freq: F3, dur: 0.4, accent: true },
-      { freq: G3, dur: 1.0, accent: true }, // Final held note
+      // Sequence from Online Sequencer
+      { freq: A4, dur: 0.5, accent: true },   // A4, dur 3
+      { freq: A4, dur: 0.35 },                 // A4, dur 2
+      { freq: A4, dur: 0.25 },                 // A4, dur 1
+      { freq: A4, dur: 0.35 },                 // A4, dur 2
+      { freq: C5, dur: 0.35, accent: true },   // C5, dur 2
+      { freq: B4, dur: 0.25 },                 // B4, dur 1
+      { freq: B4, dur: 0.5, accent: true },    // B4, dur 3
+      { freq: A4, dur: 0.25 },                 // A4, dur 1
+      { freq: A4, dur: 0.35 },                 // A4, dur 2
+      { freq: GS4, dur: 0.25 },                // G#4, dur 1
+      { freq: A4, dur: 0.7, accent: true },    // A4, dur 3 (final)
     ];
     
     let time = 0;
