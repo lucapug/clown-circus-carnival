@@ -46,8 +46,8 @@ Rules and constraints for AI assistants are documented in:
 ## Current status
 
 * ✅ Frontend MVP implemented (graphics, sounds, basic gameplay)
-* ✅ Backend architecture and API design scaffolded
-* ⏳ Backend–frontend integration (in progress)
+* ✅ Backend architecture and API design documented; backend code not yet added to the repository
+* ⏳ Backend–frontend integration pending backend implementation
 * ⏳ Gameplay refinement and logic improvements (in progress)
 
 ---
@@ -73,6 +73,8 @@ The system is designed with a **clear separation between frontend and backend**.
   * leaderboard retrieval
 * SQLite used for local persistence (designed to be replaceable)
 
+Note: The backend service described in docs is not yet included in this repository. Follow the backend design once backend code lands.
+
 Architecture details and decisions are documented in:
 
 * `docs/architecture/`
@@ -91,10 +93,10 @@ Architecture details and decisions are documented in:
 
 **Backend**
 
-* Python
-* FastAPI
-* OpenAPI
-* SQLite
+* Python (planned)
+* FastAPI (planned)
+* OpenAPI (planned)
+* SQLite (planned)
 
 **Tooling**
 

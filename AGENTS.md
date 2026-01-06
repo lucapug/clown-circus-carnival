@@ -11,3 +11,5 @@ The project intentionally starts from an AI-generated MVP.
 A refactoring phase is expected and documented.
 
 If documentation and existing code conflict, documentation takes precedence.
+
+On `main`, prioritize documentation alignment and integration; code changes follow branch responsibilities and must land through their respective branches.

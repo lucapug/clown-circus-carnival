@@ -50,3 +50,7 @@ Restrictions:
 - Do NOT introduce new architectural patterns
 - Do NOT modify visual or styling code
 
+## Development Environment
+
+During development, when not already working inside an isolated environment (e.g., GitHub Codespaces or a virtual machine), contributors and AI assistants MUST use `uv` as the Python environment and dependency manager.
+

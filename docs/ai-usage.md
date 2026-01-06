@@ -22,3 +22,5 @@ This separation is intentional to keep the project small, readable, and aligned 
 `logic` focuses on game logic and backend behavior
 
 `main` is used for review, documentation, and final integration
+
+On `main`, prioritize documentation alignment and integration; code changes follow branch responsibilities.
