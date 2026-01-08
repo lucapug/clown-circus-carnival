@@ -10,20 +10,18 @@ class Base(DeclarativeBase):
     pass
 
 
-def get_engine():
+def _create_engine():
     settings = get_settings()
+    connect_args = {"check_same_thread": False} if settings.database_url.startswith("sqlite") else {}
     return create_engine(
         settings.database_url,
-        connect_args={"check_same_thread": False},
+        connect_args=connect_args,
         future=True,
     )
 
 
-def get_sessionmaker():
-    return sessionmaker(bind=get_engine(), autoflush=False, autocommit=False, future=True)
-
-
-SessionLocal = get_sessionmaker()
+engine = _create_engine()
+SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False, future=True)
 
 
 def get_db() -> Generator:
@@ -37,5 +35,4 @@ def get_db() -> Generator:
 def init_db():
     from . import schemas  # noqa: F401  # ensure models are registered
 
-    engine = get_engine()
     Base.metadata.create_all(bind=engine)
