@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 from . import crud
-from .database import get_db, init_db
+from .database import configure_engine, get_db, init_db
 from .models import LeaderboardEntry, LeaderboardResponse, ScoreCreate, ScoreResponse
 
 
@@ -29,6 +29,7 @@ def create_app() -> FastAPI:
 
     @app.on_event("startup")
     def _startup() -> None:
+        configure_engine()
         init_db()
 
     @app.get("/", summary="Health check")
