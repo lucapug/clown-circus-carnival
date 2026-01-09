@@ -1,0 +1,27 @@
+[project]
+name = "circus-backend"
+version = "0.1.0"
+description = "FastAPI backend for the Circus Clowns leaderboard"
+authors = [{ name = "clown-circus-carnival team" }]
+requires-python = "==3.11.*"
+dependencies = [
+  "fastapi>=0.115,<1.0",
+  "uvicorn[standard]>=0.30,<0.31",
+  "sqlalchemy>=2.0,<3.0",
+  "pydantic>=2.7,<3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.4,<8.0",
+  "httpx>=0.26,<0.27",
+  "pytest-asyncio>=0.21,<0.22",
+]
+
+[build-system]
+requires = ["setuptools>=68", "wheel>=0.41"]
+build-backend = "setuptools.build_meta"
+
+[tool.uv]
+# Keep uv-managed lock and virtual env inside backend/.venv
+package = true
