@@ -46,8 +46,8 @@ Rules and constraints for AI assistants are documented in:
 ## Current status
 
 * ✅ Frontend MVP implemented (graphics, sounds, basic gameplay)
-* ✅ Backend architecture and API design documented; backend code not yet added to the repository
-* ⏳ Backend–frontend integration pending backend implementation
+* ✅ Backend implemented (FastAPI + SQLite)
+* ✅ Backend–frontend integration complete
 * ⏳ Gameplay refinement and logic improvements (in progress)
 
 ---
@@ -73,8 +73,6 @@ The system is designed with a **clear separation between frontend and backend**.
   * leaderboard retrieval
 * SQLite used for local persistence (designed to be replaceable)
 
-Note: The backend service described in docs is not yet included in this repository. Follow the backend design once backend code lands.
-
 Architecture details and decisions are documented in:
 
 * `docs/architecture/`
@@ -93,10 +91,11 @@ Architecture details and decisions are documented in:
 
 **Backend**
 
-* Python (planned)
-* FastAPI (planned)
-* OpenAPI (planned)
-* SQLite (planned)
+* Python 3.11
+* FastAPI
+* OpenAPI
+* SQLite
+* uv (environment & dependency management)
 
 **Tooling**
 
@@ -128,13 +127,36 @@ The game will be available at:
 http://localhost:5173
 ```
 
-### Backend (development stage)
+### Local development (backend)
 
-Backend scaffolding and OpenAPI specifications are available.
-See:
+Requirements:
 
-* `docs/architecture/backend-design.md`
-* `docs/architecture/openapi-spec.md`
+* Python 3.11+
+* [uv](https://docs.astral.sh/uv/)
+
+```sh
+cd backend
+uv sync
+uv run uvicorn app.main:app --reload --port 8000
+```
+
+The API will be available at:
+
+```
+http://localhost:8000
+```
+
+Interactive API documentation:
+
+```
+http://localhost:8000/docs
+```
+
+For architecture details, see:
+
+* [`docs/architecture/backend-design.md`](docs/architecture/backend-design.md)
+* [`docs/architecture/openapi-spec.md`](docs/architecture/openapi-spec.md)
+
 ---
 
 ## Repository structure
