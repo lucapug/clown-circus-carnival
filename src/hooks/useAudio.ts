@@ -59,22 +59,36 @@ export const useAudio = () => {
   }, [playTone]);
 
   const playGameOver = useCallback(() => {
-    // Funeral march style
+    // Chopin's Funeral March - from Online Sequencer
+    const A4 = 440.00, B4 = 493.88, C5 = 523.25, GS4 = 415.30;
+    
     const notes = [
-      { freq: 294, dur: 0.4 }, // D
-      { freq: 294, dur: 0.2 }, // D
-      { freq: 294, dur: 0.2 }, // D
-      { freq: 294, dur: 0.6 }, // D (long)
-      { freq: 349, dur: 0.4 }, // F
-      { freq: 330, dur: 0.4 }, // E
-      { freq: 294, dur: 0.4 }, // D
-      { freq: 262, dur: 0.6 }, // C (long)
+      // Sequence from Online Sequencer
+      { freq: A4, dur: 0.5, accent: true },   // A4, dur 3
+      { freq: A4, dur: 0.35 },                 // A4, dur 2
+      { freq: A4, dur: 0.25 },                 // A4, dur 1
+      { freq: A4, dur: 0.35 },                 // A4, dur 2
+      { freq: C5, dur: 0.35, accent: true },   // C5, dur 2
+      { freq: B4, dur: 0.25 },                 // B4, dur 1
+      { freq: B4, dur: 0.5, accent: true },    // B4, dur 3
+      { freq: A4, dur: 0.25 },                 // A4, dur 1
+      { freq: A4, dur: 0.35 },                 // A4, dur 2
+      { freq: GS4, dur: 0.25 },                // G#4, dur 1
+      { freq: A4, dur: 0.7, accent: true },    // A4, dur 3 (final)
     ];
     
     let time = 0;
-    notes.forEach(({ freq, dur }) => {
-      setTimeout(() => playTone(freq, dur, 'sawtooth', 0.3), time * 1000);
-      time += dur + 0.1;
+    notes.forEach(({ freq, dur, accent }) => {
+      setTimeout(() => {
+        const vol = accent ? 0.32 : 0.2;
+        // Dark organ-like layered sound
+        playTone(freq, dur * 0.9, 'sawtooth', vol);
+        playTone(freq * 0.5, dur, 'triangle', vol * 0.5); // Sub-octave
+        if (accent) {
+          playTone(freq * 2, dur * 0.4, 'sine', 0.05); // Harmonic on accents
+        }
+      }, time * 1000);
+      time += dur + 0.06;
     });
   }, [playTone]);
 
