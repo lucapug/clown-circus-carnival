@@ -12,8 +12,9 @@ services:
       - key: CORS_ORIGINS
         value: https://circus-frontend.onrender.com
 
-  - type: static
+  - type: web
     name: circus-frontend
+    runtime: static
     buildCommand: cd frontend && npm ci && npm run build
     staticPublishPath: frontend/dist
     envVars:
