@@ -1,3 +1,5 @@
+import os
+
 from fastapi import Depends, FastAPI, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
@@ -7,6 +9,19 @@ from .database import configure_engine, get_db, init_db
 from .models import LeaderboardEntry, LeaderboardResponse, ScoreCreate, ScoreResponse
 
 
+def _get_cors_origins() -> list[str]:
+    """Get CORS origins from environment or use development defaults."""
+    cors_origins_str = os.getenv("CORS_ORIGINS", "")
+    if cors_origins_str:
+        # Split comma-separated origins
+        return [origin.strip() for origin in cors_origins_str.split(",")]
+    # Development defaults
+    return [
+        "http://localhost:5173",
+        "http://localhost:4173",
+    ]
+
+
 def create_app() -> FastAPI:
     app = FastAPI(
         title="Circus Clowns Leaderboard API",
@@ -14,10 +29,7 @@ def create_app() -> FastAPI:
         version="0.1.0",
     )
 
-    origins = [
-        "http://localhost:5173",
-        "http://localhost:4173",
-    ]
+    origins = _get_cors_origins()
 
     app.add_middleware(
         CORSMiddleware,

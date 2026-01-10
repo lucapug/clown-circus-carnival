@@ -38,7 +38,8 @@ COPY --from=frontend-builder /app/frontend/dist /app/frontend/dist
 EXPOSE 8000
 
 # Set environment variables
-ENV PYTHONUNBUFFERED=1
+ENV PYTHONUNBUFFERED=1 \
+    PORT=8000
 
-# Run the backend server using uv
-CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run the backend server using uv, respecting PORT environment variable
+CMD ["sh", "-c", "uv run uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
