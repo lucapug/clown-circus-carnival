@@ -40,6 +40,10 @@ MANIFEST
 env/
 venv/
 
+# Allow frontend source utilities folder (ignored by generic lib/ rule)
+!frontend/src/lib/
+!frontend/src/lib/**
+
 # Backend
 backend/.venv
 backend/.python-version.local
