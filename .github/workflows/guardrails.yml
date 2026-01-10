@@ -17,7 +17,7 @@ jobs:
         run: |
           test -f AGENTS.md
           test -f frontend/src/AGENTS.md
-          test -d fontend
+          test -d frontend
           test -d backend
           test -d docs
 
