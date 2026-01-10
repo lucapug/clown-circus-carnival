@@ -1,27 +1,16 @@
 services:
   - type: web
-    name: circus-backend
+    name: circus-app
     runtime: docker
-    plan: starter
+    plan: free
     dockerfilePath: Dockerfile
+    healthCheckPath: /health
     envVars:
       - key: DATABASE_URL
         fromDatabase:
           name: circus_db
           property: connectionString
-      - key: CORS_ORIGINS
-        value: https://circus-frontend.onrender.com
-
-  - type: web
-    name: circus-frontend
-    runtime: static
-    buildCommand: cd frontend && npm ci && npm run build
-    staticPublishPath: frontend/dist
-    envVars:
-      - key: VITE_API_BASE_URL
-        value: https://circus-backend.onrender.com
 
 databases:
   - name: circus_db
-    plan: starter
-    region: oregon
+    plan: free
