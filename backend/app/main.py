@@ -1,12 +1,18 @@
 import os
+from pathlib import Path
 
 from fastapi import Depends, FastAPI, Query, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
 from . import crud
 from .database import configure_engine, get_db, init_db
 from .models import LeaderboardEntry, LeaderboardResponse, ScoreCreate, ScoreResponse
+
+# Path to frontend build artifacts
+FRONTEND_DIST_PATH = Path(__file__).resolve().parent.parent.parent / "frontend" / "dist"
 
 
 def _get_cors_origins() -> list[str]:
@@ -15,7 +21,7 @@ def _get_cors_origins() -> list[str]:
     if cors_origins_str:
         # Split comma-separated origins
         return [origin.strip() for origin in cors_origins_str.split(",")]
-    # Development defaults
+    # Development defaults - when serving frontend from same origin, CORS not needed
     return [
         "http://localhost:5173",
         "http://localhost:4173",
@@ -44,10 +50,12 @@ def create_app() -> FastAPI:
         configure_engine()
         init_db()
 
-    @app.get("/", summary="Health check")
+    # Health check endpoint (moved from / to avoid conflicts with frontend)
+    @app.get("/health", summary="Health check")
     def health_check():
         return {"status": "ok"}
 
+    # API endpoints
     @app.post(
         "/scores",
         response_model=ScoreResponse,
@@ -83,6 +91,21 @@ def create_app() -> FastAPI:
             for index, score in enumerate(scores)
         ]
         return LeaderboardResponse(entries=entries)
+
+    # Serve frontend static files (if they exist)
+    if FRONTEND_DIST_PATH.exists():
+        # Mount static assets (js, css, images, etc.)
+        app.mount("/assets", StaticFiles(directory=FRONTEND_DIST_PATH / "assets"), name="assets")
+        
+        # Serve index.html for root and any other paths (SPA routing fallback)
+        @app.get("/{full_path:path}")
+        async def serve_frontend(full_path: str):
+            # Check if requesting a specific file
+            file_path = FRONTEND_DIST_PATH / full_path
+            if file_path.is_file():
+                return FileResponse(file_path)
+            # Default to index.html for SPA routing
+            return FileResponse(FRONTEND_DIST_PATH / "index.html")
 
     return app
 
