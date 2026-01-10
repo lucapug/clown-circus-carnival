@@ -62,6 +62,7 @@ The system is designed with a **clear separation between frontend and backend**.
 * Tailwind CSS + shadcn/ui
 * Handles rendering, input, game loop, and sound effects
 * Communicates with the backend via HTTP APIs
+* Lives in `/frontend`
 
 ### Backend
 
@@ -117,6 +118,7 @@ Requirements:
 ```sh
 git clone <REPOSITORY_URL>
 cd clown-circus-carnival
+cd frontend
 npm install
 npm run dev
 ```
@@ -157,6 +159,22 @@ For architecture details, see:
 * [`docs/architecture/backend-design.md`](docs/architecture/backend-design.md)
 * [`docs/architecture/openapi-spec.md`](docs/architecture/openapi-spec.md)
 
+### Cloud deployment (Render)
+
+This repository includes a Render setup for one-click deployment:
+
+* Config: [`render.yaml`](render.yaml)
+* Backend: Docker-based web service (`circus-backend`) using the root `Dockerfile`
+  * Environment: `DATABASE_URL` injected from the managed PostgreSQL instance `circus_db`
+  * CORS: `CORS_ORIGINS` set to the Render-hosted frontend
+  * Port: 8000 (default)
+* Frontend: static site (`circus-frontend`) built from `/frontend` and published from `frontend/dist`
+  * Build: `cd frontend && npm ci && npm run build`
+  * Environment: `VITE_API_BASE_URL` points to the Render backend (`https://circus-backend.onrender.com`)
+* Database: managed PostgreSQL instance `circus_db` (starter plan)
+
+To deploy, create a Render blueprint from `render.yaml` in this repo; Render will provision the backend, frontend, and database automatically.
+
 ---
 
 ## Repository structure
@@ -165,6 +183,8 @@ For architecture details, see:
 main    → reviewed and integrated state
 style   → UI, graphics, and sound effects
 logic   → architecture, backend, and gameplay logic
+frontend/ → React + Vite frontend application
+backend/  → FastAPI + SQLite backend service
 ```
 
 ---
