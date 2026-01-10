@@ -12,13 +12,11 @@ const API_BASE_URL = getApiBaseUrl();
 export const CircusGame = () => {
   const { gameState, moveSeesaw, startGame, launchClown, canvasWidth, canvasHeight } = useGameEngine();
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
-  const [isLoadingLeaderboard, setIsLoadingLeaderboard] = useState(true);
 
   // Fetch leaderboard from API on mount
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        setIsLoadingLeaderboard(true);
         const response = await fetch(`${API_BASE_URL}/leaderboard`);
         if (response.ok) {
           const data = await response.json();
@@ -27,8 +25,6 @@ export const CircusGame = () => {
       } catch (error) {
         console.error('Failed to fetch leaderboard:', error);
         // Fallback to empty leaderboard if API unavailable
-      } finally {
-        setIsLoadingLeaderboard(false);
       }
     };
 
