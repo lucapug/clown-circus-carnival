@@ -16,7 +16,9 @@ jobs:
       - name: Ensure project rules are present
         run: |
           test -f AGENTS.md
-          test -f src/AGENTS.md
+          test -f frontend/src/AGENTS.md
+          test -d fontend
+          test -d backend
           test -d docs
 
       - name: Warn if style branch touches logic files
