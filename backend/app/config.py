@@ -8,8 +8,17 @@ DEFAULT_DB_PATH = BASE_DIR / "circus_scores.db"
 
 class Settings:
     def __init__(self) -> None:
-        db_path = Path(os.getenv("CIRCUS_DB_PATH", DEFAULT_DB_PATH))
-        self.database_url = f"sqlite:///{db_path}"
+        # Check if DATABASE_URL is set (used in containerized environments)
+        database_url = os.getenv("DATABASE_URL")
+        
+        if database_url:
+            # Use the provided DATABASE_URL (e.g., Postgres in Docker)
+            self.database_url = database_url
+        else:
+            # Fall back to SQLite for local development
+            db_path = Path(os.getenv("CIRCUS_DB_PATH", DEFAULT_DB_PATH))
+            self.database_url = f"sqlite:///{db_path}"
+        
         self.api_base_url = os.getenv("API_BASE_URL", "http://localhost:8000")
 
 

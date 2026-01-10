@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: circus-postgres
+    environment:
+      POSTGRES_USER: circus
+      POSTGRES_PASSWORD: circus_pass
+      POSTGRES_DB: circus_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - circus-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U circus"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: circus-backend
+    environment:
+      DATABASE_URL: postgresql://circus:circus_pass@postgres:5432/circus_db
+      API_BASE_URL: http://localhost:8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - circus-network
+    volumes:
+      - ./backend:/app/backend
+    command: ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+  frontend:
+    image: node:20-alpine
+    container_name: circus-frontend
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "5173:5173"
+    networks:
+      - circus-network
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8000
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    depends_on:
+      - backend
+
+networks:
+  circus-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
