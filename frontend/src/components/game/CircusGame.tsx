@@ -73,11 +73,6 @@ export const CircusGame = () => {
 
   return (
     <div className="flex flex-col items-center gap-4 p-4 min-h-screen">
-      <header className="text-center">
-        <h1 className="text-4xl font-bold text-primary arcade-text pixel-font">
-          CIRCUS CLOWNS
-        </h1>
-      </header>
 
       <GameHUD 
         score={gameState.score} 

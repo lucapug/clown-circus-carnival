@@ -59,20 +59,40 @@ export const GameOver = ({ score, onRestart, onSaveScore, leaderboard }: GameOve
 
         <div className="mb-6">
           <h3 className="text-lg font-bold text-accent mb-3 pixel-font">Leaderboard</h3>
-          <div className="space-y-2 max-h-40 overflow-y-auto">
-            {leaderboard.slice(0, 5).map((entry, i) => (
-              <div 
-                key={i} 
-                className={`flex justify-between px-3 py-1 rounded ${
-                  i === 0 ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'
-                }`}
-              >
-                <span className="pixel-font text-sm">{i + 1}. {entry.name}</span>
-                <span className="pixel-font text-sm">{entry.score}</span>
+          <div className="h-40 overflow-hidden relative">
+            {leaderboard.length > 0 ? (
+              <div className="animate-scroll-up">
+                {/* First set of entries */}
+                {leaderboard.slice(0, 10).map((entry, i) => (
+                  <div 
+                    key={`a-${i}`} 
+                    className={`flex justify-between px-3 py-1 rounded mb-2 ${
+                      i === 0 ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'
+                    }`}
+                  >
+                    <span className="pixel-font text-sm">{i + 1}. {entry.name}</span>
+                    <span className="pixel-font text-sm">{entry.score}</span>
+                  </div>
+                ))}
+                {/* Spacer for gap between end and restart */}
+                <div className="h-12" />
+                {/* Second set for seamless loop */}
+                {leaderboard.slice(0, 10).map((entry, i) => (
+                  <div 
+                    key={`b-${i}`} 
+                    className={`flex justify-between px-3 py-1 rounded mb-2 ${
+                      i === 0 ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'
+                    }`}
+                  >
+                    <span className="pixel-font text-sm">{i + 1}. {entry.name}</span>
+                    <span className="pixel-font text-sm">{entry.score}</span>
+                  </div>
+                ))}
+                {/* Spacer for gap */}
+                <div className="h-12" />
               </div>
-            ))}
-            {leaderboard.length === 0 && (
-              <div className="text-muted-foreground text-sm">No scores yet</div>
+            ) : (
+              <div className="text-muted-foreground text-sm text-center">No scores yet</div>
             )}
           </div>
         </div>

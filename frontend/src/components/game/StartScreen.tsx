@@ -10,11 +10,59 @@ export const StartScreen = ({ onStart, leaderboard }: StartScreenProps) => {
   return (
     <div className="absolute inset-0 bg-background/95 flex items-center justify-center z-10">
       <div className="text-center max-w-lg mx-4">
-        <h1 className="text-5xl font-bold rainbow-text mb-2 pixel-font">
-          CIRCUS
+        <h1 className="font-bold mb-2 pixel-font flex justify-center items-baseline">
+          {'CIRCUS'.split('').map((char, index) => {
+            // Depth effect: center chars (R=2, C=3) are largest
+            const sizes = ['text-4xl', 'text-5xl', 'text-6xl', 'text-6xl', 'text-5xl', 'text-4xl'];
+            // Rainbow colors for each character
+            const colors = [
+              'text-red-500',
+              'text-orange-500', 
+              'text-yellow-500',
+              'text-green-500',
+              'text-blue-500',
+              'text-purple-500'
+            ];
+            return (
+              <span 
+                key={index}
+                className={`${sizes[index]} ${colors[index]} inline-block animate-bounce`}
+                style={{
+                  animationDelay: `${index * 0.1}s`,
+                  animationDuration: '1s',
+                  textShadow: '2px 2px 4px rgba(0,0,0,0.5)'
+                }}
+              >
+                {char}
+              </span>
+            );
+          })}
         </h1>
-        <h2 className="text-2xl rainbow-gradient mb-8 pixel-font">
-          CLOWNS
+        <h2 className="font-bold mb-8 pixel-font flex justify-center items-baseline">
+          {'CLOWNS'.split('').map((char, index) => {
+            const sizes = ['text-xl', 'text-2xl', 'text-3xl', 'text-3xl', 'text-2xl', 'text-xl'];
+            const colors = [
+              'text-purple-500',
+              'text-blue-500',
+              'text-green-500',
+              'text-yellow-500',
+              'text-orange-500',
+              'text-red-500'
+            ];
+            return (
+              <span 
+                key={index}
+                className={`${sizes[index]} ${colors[index]} inline-block animate-bounce`}
+                style={{
+                  animationDelay: `${index * 0.1 + 0.3}s`,
+                  animationDuration: '1s',
+                  textShadow: '2px 2px 4px rgba(0,0,0,0.5)'
+                }}
+              >
+                {char}
+              </span>
+            );
+          })}
         </h2>
 
         <div className="bg-card p-6 rounded-lg arcade-border mb-8">
