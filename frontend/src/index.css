@@ -16,9 +16,9 @@
     --popover: 240 15% 8%;
     --popover-foreground: 60 10% 95%;
 
-    /* Electric blue primary - classic arcade */
-    --primary: 200 100% 55%;
-    --primary-foreground: 240 20% 4%;
+    /* Neon violet primary - peep shop arcade */
+    --primary: 280 100% 65%;
+    --primary-foreground: 0 0% 100%;
 
     /* Deep blue secondary */
     --secondary: 220 70% 20%;
@@ -34,9 +34,9 @@
     --destructive: 0 80% 55%;
     --destructive-foreground: 60 10% 95%;
 
-    --border: 200 60% 30%;
-    --input: 200 60% 30%;
-    --ring: 200 100% 55%;
+    --border: 280 60% 40%;
+    --input: 280 60% 40%;
+    --ring: 280 100% 65%;
 
     --radius: 0.25rem;
 
@@ -46,10 +46,10 @@
     --balloon-blue: 210 100% 55%;
     --clown-body: 40 80% 65%;
     --seesaw: 0 0% 80%;
-    --neon-glow: 200 100% 55%;
+    --neon-glow: 280 100% 65%;
 
     /* Arcade shadows and effects */
-    --glow-primary: 0 0 20px hsl(200 100% 55% / 0.6);
+    --glow-primary: 0 0 20px hsl(280 100% 65% / 0.6);
     --glow-cyan: 0 0 20px hsl(120 100% 50% / 0.6);
     --glow-yellow: 0 0 15px hsl(50 100% 55% / 0.8);
     --glow-green: 0 0 15px hsl(140 80% 45% / 0.8);
@@ -57,12 +57,12 @@
 
     --sidebar-background: 240 15% 8%;
     --sidebar-foreground: 60 10% 95%;
-    --sidebar-primary: 200 100% 55%;
-    --sidebar-primary-foreground: 240 20% 4%;
-    --sidebar-accent: 220 70% 20%;
+    --sidebar-primary: 280 100% 65%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 280 70% 25%;
     --sidebar-accent-foreground: 60 10% 95%;
-    --sidebar-border: 200 60% 30%;
-    --sidebar-ring: 200 100% 55%;
+    --sidebar-border: 280 60% 40%;
+    --sidebar-ring: 280 100% 65%;
   }
 
   .dark {
@@ -72,8 +72,8 @@
     --card-foreground: 60 10% 95%;
     --popover: 240 15% 8%;
     --popover-foreground: 60 10% 95%;
-    --primary: 200 100% 55%;
-    --primary-foreground: 240 20% 4%;
+    --primary: 280 100% 65%;
+    --primary-foreground: 0 0% 100%;
     --secondary: 220 70% 20%;
     --secondary-foreground: 60 10% 95%;
     --muted: 240 15% 15%;
@@ -82,17 +82,17 @@
     --accent-foreground: 240 20% 4%;
     --destructive: 0 80% 55%;
     --destructive-foreground: 60 10% 95%;
-    --border: 200 60% 30%;
-    --input: 200 60% 30%;
-    --ring: 200 100% 55%;
+    --border: 280 60% 40%;
+    --input: 280 60% 40%;
+    --ring: 280 100% 65%;
     --sidebar-background: 240 15% 8%;
     --sidebar-foreground: 60 10% 95%;
-    --sidebar-primary: 200 100% 55%;
-    --sidebar-primary-foreground: 240 20% 4%;
-    --sidebar-accent: 220 70% 20%;
+    --sidebar-primary: 280 100% 65%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 280 70% 25%;
     --sidebar-accent-foreground: 60 10% 95%;
-    --sidebar-border: 200 60% 30%;
-    --sidebar-ring: 200 100% 55%;
+    --sidebar-border: 280 60% 40%;
+    --sidebar-ring: 280 100% 65%;
   }
 }
 
