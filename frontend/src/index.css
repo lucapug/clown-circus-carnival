@@ -197,6 +197,18 @@
   100% { border-color: hsl(0 100% 60%); box-shadow: 0 0 15px hsl(0 100% 60% / 0.6); }
 }
 
+@keyframes scroll-up {
+  0% { transform: translateY(0); }
+  45% { transform: translateY(-50%); }
+  50% { transform: translateY(-50%); }
+  50.01% { transform: translateY(0); }
+  100% { transform: translateY(0); }
+}
+
+.animate-scroll-up {
+  animation: scroll-up 12s linear infinite;
+}
+
 .animate-blink {
   animation: blink 1s infinite;
 }
