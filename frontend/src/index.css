@@ -199,14 +199,11 @@
 
 @keyframes scroll-up {
   0% { transform: translateY(0); }
-  45% { transform: translateY(-50%); }
-  50% { transform: translateY(-50%); }
-  50.01% { transform: translateY(0); }
-  100% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
 }
 
 .animate-scroll-up {
-  animation: scroll-up 12s linear infinite;
+  animation: scroll-up 14.4s linear infinite;
 }
 
 .animate-blink {

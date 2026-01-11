@@ -62,18 +62,34 @@ export const GameOver = ({ score, onRestart, onSaveScore, leaderboard }: GameOve
           <div className="h-40 overflow-hidden relative">
             {leaderboard.length > 0 ? (
               <div className="animate-scroll-up">
-                {/* Double the entries for seamless loop */}
-                {[...leaderboard.slice(0, 10), ...leaderboard.slice(0, 10)].map((entry, i) => (
+                {/* First set of entries */}
+                {leaderboard.slice(0, 10).map((entry, i) => (
                   <div 
-                    key={i} 
+                    key={`a-${i}`} 
                     className={`flex justify-between px-3 py-1 rounded mb-2 ${
-                      (i % 10) === 0 ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'
+                      i === 0 ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'
                     }`}
                   >
-                    <span className="pixel-font text-sm">{(i % 10) + 1}. {entry.name}</span>
+                    <span className="pixel-font text-sm">{i + 1}. {entry.name}</span>
                     <span className="pixel-font text-sm">{entry.score}</span>
                   </div>
                 ))}
+                {/* Spacer for gap between end and restart */}
+                <div className="h-12" />
+                {/* Second set for seamless loop */}
+                {leaderboard.slice(0, 10).map((entry, i) => (
+                  <div 
+                    key={`b-${i}`} 
+                    className={`flex justify-between px-3 py-1 rounded mb-2 ${
+                      i === 0 ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'
+                    }`}
+                  >
+                    <span className="pixel-font text-sm">{i + 1}. {entry.name}</span>
+                    <span className="pixel-font text-sm">{entry.score}</span>
+                  </div>
+                ))}
+                {/* Spacer for gap */}
+                <div className="h-12" />
               </div>
             ) : (
               <div className="text-muted-foreground text-sm text-center">No scores yet</div>
