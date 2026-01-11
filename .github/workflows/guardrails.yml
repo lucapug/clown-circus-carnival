@@ -8,12 +8,18 @@ on:
       - style
 
 jobs:
-  basic-guards:
+  guardrails:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # necessario per git diff corretto
 
-      - name: Ensure project rules are present
+      # -----------------------------
+      # Structural sanity checks
+      # -----------------------------
+      - name: Ensure required project structure exists
         run: |
           test -f AGENTS.md
           test -f frontend/src/AGENTS.md
@@ -21,9 +27,39 @@ jobs:
           test -d backend
           test -d docs
 
-      - name: Warn if style branch touches logic files
-        if: github.base_ref == 'style'
+      # -----------------------------
+      # HARD RULES — merge direction
+      # -----------------------------
+      - name: Enforce merge direction rules
         run: |
-            git diff --name-only origin/${{ github.base_ref }}...HEAD | \
-            grep -E 'src/(game|logic|state)' && \
-            echo "::warning::Style branch is touching logic files"
+          BASE="${{ github.base_ref }}"
+          HEAD="${{ github.head_ref }}"
+
+          echo "Merge attempt: $HEAD -> $BASE"
+
+          # main must never be merged into feature branches
+          if [[ "$HEAD" == "main" && "$BASE" != "main" ]]; then
+            echo "❌ main must not be merged into feature branches ($BASE)"
+            exit 1
+          fi
+
+          # style and logic must never merge into each other
+          if [[ "$HEAD" == "style" && "$BASE" == "logic" ]]; then
+            echo "❌ style cannot be merged into logic"
+            exit 1
+          fi
+
+          if [[ "$HEAD" == "logic" && "$BASE" == "style" ]]; then
+            echo "❌ logic cannot be merged into style"
+            exit 1
+          fi
+
+      # -----------------------------
+      # SOFT RULES — style isolation
+      # -----------------------------
+      - name: Warn if style branch touches game logic
+        if: github.head_ref == 'style'
+        run: |
+          git diff --name-only origin/${{ github.base_ref }}...HEAD | \
+          grep -E 'frontend/src/(game|engine|state|logic)' && \
+          echo "::warning::Style branch is touching game logic files"
