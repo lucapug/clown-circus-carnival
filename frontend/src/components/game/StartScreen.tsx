@@ -13,7 +13,7 @@ export const StartScreen = ({ onStart, leaderboard }: StartScreenProps) => {
         <h1 className="font-bold mb-2 pixel-font flex justify-center items-baseline">
           {'CIRCUS'.split('').map((char, index) => {
             // Depth effect: center chars (R=2, C=3) are largest
-            const sizes = ['text-3xl', 'text-4xl', 'text-5xl', 'text-5xl', 'text-4xl', 'text-3xl'];
+            const sizes = ['text-4xl', 'text-5xl', 'text-6xl', 'text-6xl', 'text-5xl', 'text-4xl'];
             // Rainbow colors for each character
             const colors = [
               'text-red-500',
@@ -40,7 +40,7 @@ export const StartScreen = ({ onStart, leaderboard }: StartScreenProps) => {
         </h1>
         <h2 className="font-bold mb-8 pixel-font flex justify-center items-baseline">
           {'CLOWNS'.split('').map((char, index) => {
-            const sizes = ['text-lg', 'text-xl', 'text-2xl', 'text-2xl', 'text-xl', 'text-lg'];
+            const sizes = ['text-xl', 'text-2xl', 'text-3xl', 'text-3xl', 'text-2xl', 'text-xl'];
             const colors = [
               'text-purple-500',
               'text-blue-500',
