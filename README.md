@@ -102,7 +102,8 @@ Architecture details and decisions are documented in:
 
 * GitHub Actions (CI-ready)
 * GitHub Codespaces
-* Docker (planned for later phase)
+* Docker
+* Render (cloud deployment via blueprint)
 
 ---
 
