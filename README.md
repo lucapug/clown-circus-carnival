@@ -109,6 +109,45 @@ Architecture details and decisions are documented in:
 
 ## Development
 
+### Prerequisites
+
+The following tools are required for local development:
+
+* **Node.js** (v18+) and **npm**
+* **Python 3.11+**
+* **[uv](https://docs.astral.sh/uv/)** (Python environment & dependency manager)
+* **Docker** (for containerized builds and deployment)
+
+Note: GitHub Codespaces includes Node.js, Python, and Docker pre-installed in the standard VM. You'll need to install `uv` separately (see below).
+
+### GitHub Codespaces
+
+This repository is configured for GitHub Codespaces, providing a complete cloud-based development environment:
+
+1. Click the **Code** button on the GitHub repository page
+2. Select the **Codespaces** tab
+3. Click **Create codespace on main** (or your target branch)
+
+Codespaces will automatically:
+- Provision a VM with Node.js, Python, and Docker pre-installed
+- Clone the repository
+- Set up your development environment
+
+Once the Codespace is ready, install `uv`:
+
+```sh
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source $HOME/.cargo/env
+```
+
+Then run the combined dev workflow:
+
+```sh
+npm run dev
+```
+
+The frontend will be accessible via the forwarded port 5173, and the backend API at port 8000.
+
 ### Combined development (frontend + backend)
 
 Start both services together from the repository root using the `concurrently`-powered script defined in [package.json](package.json):
@@ -118,11 +157,6 @@ npm run dev
 ```
 
 ### Local development (frontend)
-
-Requirements:
-
-* Node.js
-* npm
 
 ```sh
 git clone <REPOSITORY_URL>
@@ -150,11 +184,6 @@ cp .env.example .env
 ```
 
 ### Local development (backend)
-
-Requirements:
-
-* Python 3.11+
-* [uv](https://docs.astral.sh/uv/)
 
 ```sh
 cd backend
