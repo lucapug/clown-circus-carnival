@@ -109,6 +109,14 @@ Architecture details and decisions are documented in:
 
 ## Development
 
+### Combined development (frontend + backend)
+
+Start both services together from the repository root using the `concurrently`-powered script defined in [package.json](package.json):
+
+```sh
+npm run dev
+```
+
 ### Local development (frontend)
 
 Requirements:
@@ -128,6 +136,17 @@ The game will be available at:
 
 ```
 http://localhost:5173
+```
+
+#### Environment configuration (frontend)
+
+Copy the example env file and set the API base URL for local development:
+
+```sh
+cd frontend
+cp .env.example .env
+# Edit .env and set:
+# VITE_API_BASE_URL=http://localhost:8000
 ```
 
 ### Local development (backend)
@@ -159,6 +178,33 @@ For architecture details, see:
 
 * [`docs/architecture/backend-design.md`](docs/architecture/backend-design.md)
 * [`docs/architecture/openapi-spec.md`](docs/architecture/openapi-spec.md)
+
+### Build & preview (frontend)
+
+Create a production build and preview it locally:
+
+```sh
+cd frontend
+npm run build
+npm run preview
+```
+
+### Containerization (Docker)
+
+Build the multi-stage Docker image (frontend build + backend runtime) using the [Dockerfile](Dockerfile), then run the backend service:
+
+```sh
+docker build -t circus-app .
+docker run -p 8000:8000 circus-app
+```
+
+Note: The root [package.json](package.json) defines `docker:up`, `docker:down`, and `docker:build` scripts that assume a Docker Compose file. If/when a `docker-compose.yml` is added, you can use:
+
+```sh
+npm run docker:up       # start services
+npm run docker:down     # stop services
+npm run docker:build    # build services
+```
 
 ### Cloud deployment (Render)
 
