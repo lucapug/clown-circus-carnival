@@ -122,11 +122,7 @@ Note: GitHub Codespaces includes Node.js, Python, and Docker pre-installed in th
 
 ### GitHub Codespaces
 
-This repository is configured for GitHub Codespaces, providing a complete cloud-based development environment:
-
-1. Click the **Code** button on the GitHub repository page
-2. Select the **Codespaces** tab
-3. Click **Create codespace on main** (or your target branch)
+This repository is configured for GitHub Codespaces, providing a complete cloud-based development environment.
 
 Codespaces will automatically:
 - Provision a VM with Node.js, Python, and Docker pre-installed
@@ -218,22 +214,42 @@ npm run build
 npm run preview
 ```
 
-### Containerization (Docker)
+### Reproducibility / Containerization
 
-Build the multi-stage Docker image (frontend build + backend runtime) using the [Dockerfile](Dockerfile), then run the backend service:
+You can run the project either directly with Docker or via npm scripts using Docker Compose.
+
+#### Option 1 – Docker only
+
+From the repository root:
 
 ```sh
 docker build -t circus-app .
 docker run -p 8000:8000 circus-app
 ```
 
-Note: The root [package.json](package.json) defines `docker:up`, `docker:down`, and `docker:build` scripts that assume a Docker Compose file. If/when a `docker-compose.yml` is added, you can use:
+* Builds the backend (including frontend production build if defined in Dockerfile)
+* Runs the backend container on port 8000
+* Requires a separate Postgres container if not included in the Dockerfile setup
+
+#### Option 2 – Docker Compose via npm scripts
+
+Using the `docker-compose.yml` already included:
 
 ```sh
-npm run docker:up       # start services
-npm run docker:down     # stop services
-npm run docker:build    # build services
+npm run docker:up
 ```
+
+* Launches frontend, backend, and Postgres in connected containers
+* Database persists in the `postgres_data` volume
+* Backend automatically connects to the database
+
+To stop the containers:
+
+```sh
+npm run docker:down
+```
+
+* Stops and removes all containers while keeping volumes and images intact
 
 ### Cloud deployment (Render)
 
