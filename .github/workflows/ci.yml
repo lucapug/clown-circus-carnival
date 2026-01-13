@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [main, logic, style]
+  pull_request:
+    branches: [main, logic, style]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [22.x]
+        python-version: ['3.11']
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Frontend setup and tests
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm install
+
+      - name: Run frontend tests
+        working-directory: ./frontend
+        run: npm run test:run
+
+      # Backend setup and tests
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: |
+          ~/.cargo/bin/uv sync --all-extras
+
+      - name: Run backend tests
+        working-directory: ./backend
+        run: ~/.cargo/bin/uv run pytest tests/test_api.py -v
+
+  # Optional: Docker build sanity check
+  docker-build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image (sanity check)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          tags: circus-clowns:latest
