@@ -40,6 +40,7 @@ export interface GameState {
   balloons: Balloon[];
   seesaw: Seesaw;
   floatingTexts: FloatingText[];
+  currentJumpVelocity: number;
 }
 
 export interface FloatingText {
