@@ -21,6 +21,11 @@ const SEESAW_Y = CANVAS_HEIGHT - 80;
 const BALLOON_ROWS = 4;
 const BALLOONS_PER_ROW = 14;
 
+// Progressive jump velocity settings
+const MIN_JUMP_VELOCITY = -14;
+const MAX_JUMP_VELOCITY = -17;
+const JUMP_VELOCITY_INCREMENT = 0.2;
+
 // Diving board positions (middle-sides of screen)
 const DIVING_BOARD_Y = CANVAS_HEIGHT / 2;
 export const DIVING_BOARDS = [
@@ -101,6 +106,7 @@ const initialState: GameState = {
     tilt: 'left', // Tilted because only left clown is on it
   },
   floatingTexts: [],
+  currentJumpVelocity: MIN_JUMP_VELOCITY,
 };
 
 export const useGameEngine = () => {
@@ -227,6 +233,7 @@ export const useGameEngine = () => {
       const seesawX = seesawXRef.current;
       let newLives = prev.lives;
       let clownToLaunchIdx: number | null = null;
+      let newJumpVelocity = prev.currentJumpVelocity;
       
       // First pass: detect landings and mark which clown to launch
       const processedClowns: Clown[] = newClowns.map((clown, idx) => {
@@ -262,6 +269,9 @@ export const useGameEngine = () => {
                 playDeath();
                 addFloatingText('SPLAT!', clown.x, SEESAW_Y - 30);
                 
+                // Reset jump velocity on death
+                newJumpVelocity = MIN_JUMP_VELOCITY;
+                
                 // Reset clown to diving board
                 const freeSide: 'left' | 'right' = clown.seesawSide === 'left' ? 'right' : 'left';
                 return createInitialClown(freeSide, true);
@@ -271,6 +281,9 @@ export const useGameEngine = () => {
               playBounce();
               scoreGain += BOUNCE_POINTS;
               addFloatingText(`+${BOUNCE_POINTS}`, clown.x, clown.y);
+              
+              // Increment jump velocity for next launch (progressive difficulty)
+              newJumpVelocity = Math.max(MAX_JUMP_VELOCITY, newJumpVelocity - JUMP_VELOCITY_INCREMENT);
               
               // Find the other clown on the seesaw to launch
               const otherIdx = newClowns.findIndex((c, i) => i !== idx && c.isOnSeesaw);
@@ -294,6 +307,9 @@ export const useGameEngine = () => {
               playDeath();
               addFloatingText('SPLAT!', clown.x, SEESAW_Y - 30);
               
+              // Reset jump velocity on death
+              newJumpVelocity = MIN_JUMP_VELOCITY;
+              
               // Reset clown to diving board
               const freeSide: 'left' | 'right' = clown.seesawSide === 'left' ? 'right' : 'left';
               return createInitialClown(freeSide, true);
@@ -306,6 +322,9 @@ export const useGameEngine = () => {
           newLives--;
           playDeath();
           addFloatingText('SPLAT!', clown.x, CANVAS_HEIGHT - 50);
+          
+          // Reset jump velocity on death
+          newJumpVelocity = MIN_JUMP_VELOCITY;
           
           // Reset clown to diving board
           return createInitialClown('right', true);
@@ -321,7 +340,7 @@ export const useGameEngine = () => {
             ...clown,
             isFlying: true,
             isOnSeesaw: false,
-            vy: BOUNCE_VELOCITY,
+            vy: newJumpVelocity,
             vx: (Math.random() - 0.5) * 4,
           };
         }
@@ -350,6 +369,7 @@ export const useGameEngine = () => {
         lives: newLives,
         bonusJumps: prev.bonusJumps + extraJumps,
         isGameOver,
+        currentJumpVelocity: newJumpVelocity,
         seesaw: {
           ...prev.seesaw,
           x: seesawX,
@@ -390,6 +410,7 @@ export const useGameEngine = () => {
         width: SEESAW_WIDTH,
         tilt: 'left',
       },
+      currentJumpVelocity: MIN_JUMP_VELOCITY,
     });
     seesawXRef.current = CANVAS_WIDTH / 2;
     startBackgroundMusic();
@@ -407,7 +428,7 @@ export const useGameEngine = () => {
         
         return {
           ...prev,
-          clowns: prev.clowns.map(c => 
+          clowns: prev.clowns.map(c =>
             c === clownOnDivingBoard
               ? { ...c, isFlying: true, isOnDivingBoard: false, vy: 2, vx: directionX }
               : c
@@ -421,9 +442,9 @@ export const useGameEngine = () => {
       
       return {
         ...prev,
-        clowns: prev.clowns.map(c => 
+        clowns: prev.clowns.map(c =>
           c === clownToLaunch
-            ? { ...c, isFlying: true, isOnSeesaw: false, vy: BOUNCE_VELOCITY, vx: (Math.random() - 0.5) * 4 }
+            ? { ...c, isFlying: true, isOnSeesaw: false, vy: prev.currentJumpVelocity, vx: (Math.random() - 0.5) * 4 }
             : c
         ),
       };
