@@ -41,6 +41,7 @@ export interface GameState {
   seesaw: Seesaw;
   floatingTexts: FloatingText[];
   currentJumpVelocity: number;
+  level: number;
 }
 
 export interface FloatingText {
