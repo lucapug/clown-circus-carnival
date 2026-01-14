@@ -107,6 +107,7 @@ const initialState: GameState = {
   },
   floatingTexts: [],
   currentJumpVelocity: MIN_JUMP_VELOCITY,
+  level: 1,
 };
 
 export const useGameEngine = () => {
@@ -200,6 +201,7 @@ export const useGameEngine = () => {
       let newBalloons = [...prev.balloons];
       let scoreGain = 0;
       let extraJumps = 0;
+      let levelUp = false;
       
       newClowns.forEach(clown => {
         if (!clown.isFlying) return;
@@ -219,8 +221,8 @@ export const useGameEngine = () => {
             
             // Check if row is cleared
             const rowCheck = checkRowCleared(
-              newBalloons, 
-              balloon.row, 
+              newBalloons,
+              balloon.row,
               balloon.color
             );
             scoreGain += rowCheck.bonusPoints;
@@ -228,6 +230,14 @@ export const useGameEngine = () => {
           }
         });
       });
+      
+      // Check if all balloons are popped - level complete!
+      const allBalloonsPopped = newBalloons.every(b => b.popped);
+      if (allBalloonsPopped && !prev.balloons.every(b => b.popped)) {
+        levelUp = true;
+        playBonus();
+        addFloatingText(`LEVEL UP!`, CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
+      }
       
       // Check seesaw collision for flying clowns
       const seesawX = seesawXRef.current;
@@ -336,12 +346,14 @@ export const useGameEngine = () => {
       // Second pass: launch the other clown if someone landed
       const finalClowns = processedClowns.map((clown, idx) => {
         if (clownToLaunchIdx === idx && clown.isOnSeesaw) {
+          // Calculate horizontal velocity based on level (increases difficulty)
+          const horizontalVelocityMultiplier = 1 + (prev.level - 1) * 0.25;
           return {
             ...clown,
             isFlying: true,
             isOnSeesaw: false,
             vy: newJumpVelocity,
-            vx: (Math.random() - 0.5) * 4,
+            vx: (Math.random() - 0.5) * 4 * horizontalVelocityMultiplier,
           };
         }
         return clown;
@@ -364,12 +376,13 @@ export const useGameEngine = () => {
       return {
         ...prev,
         clowns: finalClowns,
-        balloons: newBalloons,
+        balloons: levelUp ? createBalloons() : newBalloons,
         score: prev.score + scoreGain,
-        lives: newLives,
+        lives: levelUp ? prev.lives + 1 : newLives,
         bonusJumps: prev.bonusJumps + extraJumps,
         isGameOver,
         currentJumpVelocity: newJumpVelocity,
+        level: levelUp ? prev.level + 1 : prev.level,
         seesaw: {
           ...prev.seesaw,
           x: seesawX,
@@ -411,6 +424,7 @@ export const useGameEngine = () => {
         tilt: 'left',
       },
       currentJumpVelocity: MIN_JUMP_VELOCITY,
+      level: 1,
     });
     seesawXRef.current = CANVAS_WIDTH / 2;
     startBackgroundMusic();
@@ -419,6 +433,9 @@ export const useGameEngine = () => {
   const launchClown = useCallback(() => {
     setGameState(prev => {
       if (!prev.isPlaying || prev.isGameOver) return prev;
+      
+      // Calculate horizontal velocity based on level (increases difficulty)
+      const horizontalVelocityMultiplier = 1 + (prev.level - 1) * 0.25;
       
       // First check for clown on diving board
       const clownOnDivingBoard = prev.clowns.find(c => c.isOnDivingBoard);
@@ -430,7 +447,7 @@ export const useGameEngine = () => {
           ...prev,
           clowns: prev.clowns.map(c =>
             c === clownOnDivingBoard
-              ? { ...c, isFlying: true, isOnDivingBoard: false, vy: 2, vx: directionX }
+              ? { ...c, isFlying: true, isOnDivingBoard: false, vy: 2, vx: directionX * horizontalVelocityMultiplier }
               : c
           ),
         };
@@ -444,7 +461,7 @@ export const useGameEngine = () => {
         ...prev,
         clowns: prev.clowns.map(c =>
           c === clownToLaunch
-            ? { ...c, isFlying: true, isOnSeesaw: false, vy: prev.currentJumpVelocity, vx: (Math.random() - 0.5) * 4 }
+            ? { ...c, isFlying: true, isOnSeesaw: false, vy: prev.currentJumpVelocity, vx: (Math.random() - 0.5) * 4 * horizontalVelocityMultiplier }
             : c
         ),
       };
