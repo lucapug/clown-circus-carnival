@@ -167,6 +167,26 @@ export const useGameEngine = () => {
           newClown.vx = -Math.abs(newClown.vx) * 0.8;
         }
         
+        // Bounce off diving boards (trampolines)
+        const boardWidth = 70;
+        const boardHeight = 10;
+        
+        DIVING_BOARDS.forEach(board => {
+          const boardX = board.side === 'left' ? 22 : CANVAS_WIDTH - 22 - boardWidth;
+          const boardY = board.y - boardHeight / 2;
+          
+          // Check if clown intersects with diving board
+          if (newClown.x >= boardX && newClown.x <= boardX + boardWidth &&
+              newClown.y >= boardY - CLOWN_SIZE && newClown.y <= boardY + boardHeight) {
+            // Only bounce if clown is moving downward (falling onto board)
+            if (newClown.vy > 0) {
+              newClown.vy = -Math.abs(newClown.vy) * 0.9; // Bounce with slight damping
+              newClown.y = boardY - CLOWN_SIZE; // Position clown above board
+              playBounce();
+            }
+          }
+        });
+        
         return newClown;
       });
       
@@ -229,12 +249,28 @@ export const useGameEngine = () => {
             const isOnEdge = isOnLeftEdge || isOnRightEdge;
             
             if (isOnEdge) {
+              const side: 'left' | 'right' = isOnLeftEdge ? 'left' : 'right';
+              
+              // Check if another clown is already on this side of the seesaw
+              const otherClownOnSameSide = newClowns.find((c, i) =>
+                i !== idx && c.isOnSeesaw && c.seesawSide === side
+              );
+              
+              if (otherClownOnSameSide) {
+                // Landing on occupied side = death!
+                newLives--;
+                playDeath();
+                addFloatingText('SPLAT!', clown.x, SEESAW_Y - 30);
+                
+                // Reset clown to diving board
+                const freeSide: 'left' | 'right' = clown.seesawSide === 'left' ? 'right' : 'left';
+                return createInitialClown(freeSide, true);
+              }
+              
               // Successful landing on edge!
               playBounce();
               scoreGain += BOUNCE_POINTS;
               addFloatingText(`+${BOUNCE_POINTS}`, clown.x, clown.y);
-              
-              const side: 'left' | 'right' = isOnLeftEdge ? 'left' : 'right';
               
               // Find the other clown on the seesaw to launch
               const otherIdx = newClowns.findIndex((c, i) => i !== idx && c.isOnSeesaw);
